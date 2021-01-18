@@ -2,6 +2,7 @@
 using BS_Utils.Utilities;
 using UnityEngine;
 using System.Linq;
+using TimeWarpMod.Settings;
 
 namespace TimeWarpMod.Main
 {
@@ -17,7 +18,6 @@ namespace TimeWarpMod.Main
         private static float maxTimeScale = 1.3f;
 
         private static AudioTimeSyncController ATSC;
-        private static BeatmapObjectManager BMOM;
         private static SaberManager SM;
         private static VRController[] controllers;
         private static float _timeScale = 1f;
@@ -31,11 +31,11 @@ namespace TimeWarpMod.Main
                 AudioTimeSyncController.InitData initData = ATSC.GetPrivateField<AudioTimeSyncController.InitData>("_initData");
                 AudioTimeSyncController.InitData newInitData = new AudioTimeSyncController.InitData(initData.audioClip, ATSC.songTime, initData.songTimeOffset, _timeScale);
                 ATSC.SetPrivateField("_initData", newInitData);
-                SetTimeSync(ATSC, _timeScale, newInitData);
+                SetTimeSync(ATSC, _timeScale);
             }
         }
 
-        public static void SetTimeSync(AudioTimeSyncController timeSync, float newTimeScale, AudioTimeSyncController.InitData newData)
+        public static void SetTimeSync(AudioTimeSyncController timeSync, float newTimeScale)
         {
 
             timeSync.SetPrivateField("_timeScale", newTimeScale);
@@ -44,10 +44,9 @@ namespace TimeWarpMod.Main
             timeSync.audioSource.pitch = newTimeScale;
         }
 
-        public GameSpeedManager(AudioTimeSyncController timeSync, BeatmapObjectManager bom, SaberManager saberManager)
+        public GameSpeedManager(AudioTimeSyncController timeSync, SaberManager saberManager)
         {
             ATSC = timeSync;
-            BMOM = bom;
             SM = saberManager;
         }
 
@@ -63,6 +62,14 @@ namespace TimeWarpMod.Main
 
         public void Tick()
         {
+            if(TimeWarpConfig.Instance.SuperHotModifier)
+            {
+                DoSuperHot();
+            }
+        }
+
+        public void DoSuperHot()
+        {
             //Saber Velocity
             estimateOne.AddContext(controllers[0].position);
             float velOne = estimateOne.Estimate();
@@ -73,7 +80,7 @@ namespace TimeWarpMod.Main
             float leftBlade = Map(SM.leftSaber.bladeSpeed, minBlade, maxBlade, minController, maxController);
             float rightBlade = Map(SM.rightSaber.bladeSpeed, minBlade, maxBlade, minController, maxController);
 
-            float maxVel = Mathf.Clamp(Mathf.Max(new float[] {velOne, velTwo, leftBlade, rightBlade}), minController, maxController);
+            float maxVel = Mathf.Clamp(Mathf.Max(new float[] { velOne, velTwo, leftBlade, rightBlade }), minController, maxController);
             float newTimeScale = Map(maxVel, minController, maxController, 0, maxTimeScale);
             float old = TimeScale;
             TimeScale = Mathf.Clamp(Mathf.Lerp(TimeScale, newTimeScale, Time.deltaTime), minTimeScale, 1);

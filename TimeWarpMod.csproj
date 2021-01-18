@@ -45,6 +45,10 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="BSML, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Plugins\BSML.dll</HintPath>
+    </Reference>
     <Reference Include="BS_Utils, Version=1.6.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Beat Saber\Plugins\BS_Utils.dll</HintPath>
@@ -126,12 +130,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TimeWarpMod\EstimateVelocity.cs" />
-    <Compile Include="TimeWarpMod\GameSpeedManager.cs" />
-    <Compile Include="TimeWarpMod\MyGameInstaller.cs" />
+    <Compile Include="Main\EstimateVelocity.cs" />
+    <Compile Include="Main\GameSpeedManager.cs" />
+    <Compile Include="Main\MyGameInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\TimeWarpConfig.cs" />
+    <Compile Include="Settings\TimeWarpSettingsUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
@@ -139,6 +145,7 @@
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
     <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
+    <EmbeddedResource Include="Views\modifiers.bsml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks">

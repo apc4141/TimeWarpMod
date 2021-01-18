@@ -2,6 +2,8 @@
 using IPALogger = IPA.Logging.Logger;
 using SiraUtil.Zenject;
 using TimeWarpMod.Main;
+using BeatSaberMarkupLanguage.GameplaySetup;
+using TimeWarpMod.Settings;
 
 namespace TimeWarpMod
 {
@@ -19,7 +21,21 @@ namespace TimeWarpMod
             log = logger;
             zenjector.OnGame<MyGameInstaller>();
 
+            InitConfig();
+
             log.Debug("Time Warp Mod initialized!");
+        }
+
+        [OnEnable]
+        public void OnEnable()
+        {
+            PersistentSingleton<GameplaySetup>.instance.AddTab("Time Warp", "TimeWarpMod.Views.modifiers.bsml", PersistentSingleton<TimeWarpSettingsUI>.instance);
+        }
+
+        public void InitConfig()
+        {
+            TimeWarpConfig.Instance = new TimeWarpConfig();
+            TimeWarpConfig.Instance.SuperHotModifier = false;
         }
     }
 }
