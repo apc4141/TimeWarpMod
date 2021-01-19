@@ -6,7 +6,7 @@ using TimeWarpMod.Settings;
 
 namespace TimeWarpMod.Main
 {
-    class GameSpeedManager : IInitializable, ITickable
+    class GameManager : IInitializable, ITickable
     {
         private const int SMOOTH_VEL = 10;
 
@@ -44,7 +44,7 @@ namespace TimeWarpMod.Main
             timeSync.audioSource.pitch = newTimeScale;
         }
 
-        public GameSpeedManager(AudioTimeSyncController timeSync, SaberManager saberManager)
+        public GameManager(AudioTimeSyncController timeSync, SaberManager saberManager)
         {
             ATSC = timeSync;
             SM = saberManager;
@@ -63,9 +63,7 @@ namespace TimeWarpMod.Main
         public void Tick()
         {
             if(TimeWarpConfig.Instance.SuperHotModifier)
-            {
                 DoSuperHot();
-            }
         }
 
         public void DoSuperHot()

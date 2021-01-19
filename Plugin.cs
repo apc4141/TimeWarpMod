@@ -19,7 +19,7 @@ namespace TimeWarpMod
         public Plugin(Zenjector zenjector, IPALogger logger)
         {
             log = logger;
-            zenjector.OnGame<MyGameInstaller>();
+            zenjector.OnGame<GameInstaller>();
 
             InitConfig();
 
