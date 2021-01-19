@@ -9,10 +9,15 @@ namespace TimeWarpMod.Settings
     class TimeWarpConfig
     {
         public static TimeWarpConfig Instance {get; set;}
-        public bool SuperHotModifier 
+
+        public static void Init()
         {
-            get;
-            set;
+            Instance = new TimeWarpConfig();
+            Instance.SuperHotModifier = false;
         }
+
+        public bool SuperHotModifier { get; set; }
+
+
     }
 }
