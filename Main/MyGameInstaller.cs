@@ -2,11 +2,11 @@
 
 namespace TimeWarpMod.Main
 {
-    class GameInstaller : MonoInstaller
+    class MyGameInstaller : MonoInstaller
     { 
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<GameManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameSpeedManager>().AsSingle();
         }    
     }
 }

@@ -19,9 +19,9 @@ namespace TimeWarpMod
         public Plugin(Zenjector zenjector, IPALogger logger)
         {
             log = logger;
-            zenjector.OnGame<GameInstaller>();
+            zenjector.OnGame<MyGameInstaller>();
 
-            TimeWarpConfig.Init();
+            InitConfig();
 
             log.Debug("Time Warp Mod initialized!");
         }
@@ -30,6 +30,12 @@ namespace TimeWarpMod
         public void OnEnable()
         {
             PersistentSingleton<GameplaySetup>.instance.AddTab("Time Warp", "TimeWarpMod.Views.modifiers.bsml", PersistentSingleton<TimeWarpSettingsUI>.instance);
+        }
+
+        public void InitConfig()
+        {
+            TimeWarpConfig.Instance = new TimeWarpConfig();
+            TimeWarpConfig.Instance.SuperHotModifier = false;
         }
     }
 }
