@@ -131,13 +131,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\EstimateVelocity.cs" />
-    <Compile Include="Main\GameSpeedManager.cs" />
-    <Compile Include="Main\MyGameInstaller.cs" />
+    <Compile Include="Main\GameManager.cs" />
+    <Compile Include="Main\GameInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\TimeWarpConfig.cs" />
     <Compile Include="Settings\TimeWarpSettingsUI.cs" />
+    <Compile Include="Utils\TimeWarpUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="manifest.json" />

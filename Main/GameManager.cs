@@ -3,6 +3,7 @@ using BS_Utils.Utilities;
 using UnityEngine;
 using System.Linq;
 using TimeWarpMod.Settings;
+using TimeWarpMod.Utils;
 
 namespace TimeWarpMod.Main
 {
@@ -10,6 +11,8 @@ namespace TimeWarpMod.Main
     {
         private const int SMOOTH_VEL = 10;
 
+        private static float minNoteDist = 3.5f;
+        private static float maxNoteDist = 13f;
         private static float minBlade = 0.1f;
         private static float maxBlade = 25f;
         private static float minController = 0.1f;
@@ -19,6 +22,7 @@ namespace TimeWarpMod.Main
 
         private static AudioTimeSyncController ATSC;
         private static SaberManager SM;
+        private static BasicBeatmapObjectManager BBMOM;
         private static VRController[] controllers;
         private static float _timeScale = 1f;
 
@@ -44,9 +48,10 @@ namespace TimeWarpMod.Main
             timeSync.audioSource.pitch = newTimeScale;
         }
 
-        public GameManager(AudioTimeSyncController timeSync, SaberManager saberManager)
+        public GameManager(AudioTimeSyncController timeSync, BasicBeatmapObjectManager beatmapObjectManager, SaberManager saberManager)
         {
             ATSC = timeSync;
+            BBMOM = beatmapObjectManager;
             SM = saberManager;
         }
 
@@ -64,6 +69,8 @@ namespace TimeWarpMod.Main
         {
             if(TimeWarpConfig.Instance.SuperHotModifier)
                 DoSuperHot();
+            if (TimeWarpConfig.Instance.MatrixModifier)
+                DoMatrix();
         }
 
         public void DoSuperHot()
@@ -75,19 +82,24 @@ namespace TimeWarpMod.Main
             float velTwo = estimateTwo.Estimate();
 
             //Saber Rotational Velocity
-            float leftBlade = Map(SM.leftSaber.bladeSpeed, minBlade, maxBlade, minController, maxController);
-            float rightBlade = Map(SM.rightSaber.bladeSpeed, minBlade, maxBlade, minController, maxController);
+            float leftBlade = SM.leftSaber.bladeSpeed.Map(minBlade, maxBlade, minController, maxController);
+            float rightBlade = SM.rightSaber.bladeSpeed.Map(minBlade, maxBlade, minController, maxController);
 
             float maxVel = Mathf.Clamp(Mathf.Max(new float[] { velOne, velTwo, leftBlade, rightBlade }), minController, maxController);
-            float newTimeScale = Map(maxVel, minController, maxController, 0, maxTimeScale);
+            float newTimeScale = maxVel.Map(minController, maxController, 0, maxTimeScale);
             float old = TimeScale;
             TimeScale = Mathf.Clamp(Mathf.Lerp(TimeScale, newTimeScale, Time.deltaTime), minTimeScale, 1);
             Plugin.log.Debug("Changing from: " + old + " to: " + TimeScale);
         }
 
-        public static float Map(float value, float fromSource, float toSource, float fromTarget, float toTarget)
+        public void DoMatrix()
         {
-            return (value - fromSource) / (toSource - fromSource) * (toTarget - fromTarget) + fromTarget;
+            NoteMovement note = BBMOM.GetClosestNote();
+            float distanceToPlayer = note.distanceToPlayer;
+
+            float newTimeScale = Mathf.Clamp(distanceToPlayer.Map(minNoteDist, maxNoteDist, minTimeScale, maxTimeScale) , minTimeScale-0.2f, maxTimeScale);
+            //Plugin.log.Debug("Mapping: "+distanceToPlayer+", "+minNoteDist+":"+maxNoteDist+" => "+minTimeScale+":"+maxTimeScale+", become "+newTimeScale);
+            TimeScale = newTimeScale;
         }
     }
 }

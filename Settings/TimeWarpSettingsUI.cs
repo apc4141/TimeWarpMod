@@ -21,5 +21,18 @@ namespace TimeWarpMod.Settings
                 TimeWarpConfig.Instance.SuperHotModifier = value;
             }
         }
+
+        [UIValue("matrix")]
+        public bool MatrixModifier
+        {
+            get
+            {
+                return TimeWarpConfig.Instance.MatrixModifier;
+            }
+            set
+            {
+                TimeWarpConfig.Instance.MatrixModifier = value;
+            }
+        }
     }
 }
